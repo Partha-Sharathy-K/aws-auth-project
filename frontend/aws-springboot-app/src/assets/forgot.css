@@ -1,0 +1,66 @@
+.forgot-wrapper {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0fdfa, #ecfeff);
+    font-family: "Segoe UI", sans-serif;
+}
+
+.forgot-card {
+    width: 380px;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.forgot-card h2 {
+    margin-bottom: 8px;
+    color: #014f4f;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 25px;
+}
+
+.forgot-input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    font-size: 14px;
+    color: #111827;
+}
+
+.forgot-input::placeholder {
+    color: #9ca3af;
+}
+
+.primary-btn {
+    width: 100%;
+    padding: 14px;
+    background: #014f4f;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+}
+
+.primary-btn:hover {
+    background: #013f3f;
+}
+
+.success-msg {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #047857;
+}
