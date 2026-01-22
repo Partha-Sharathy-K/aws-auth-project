@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    environment {
+        APP_NAME = "aws-backend"
+        CONTAINER_NAME = "aws-backend-container"
+        PORT = "8080"
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/<your-username>/<repo>.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                docker build -t $APP_NAME .
+                '''
+            }
+        }
+
+        stage('Stop Old Container') {
+            steps {
+                sh '''
+                docker rm -f $CONTAINER_NAME || true
+                '''
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh '''
+                docker run -d \
+                  --name $CONTAINER_NAME \
+                  --network aws-network \
+                  -p $PORT:$PORT \
+                  $APP_NAME
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Backend deployed successfully!"
+        }
+        failure {
+            echo "❌ Deployment failed"
+        }
+    }
+}
+
