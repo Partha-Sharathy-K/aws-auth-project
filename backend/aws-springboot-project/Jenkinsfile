@@ -5,59 +5,42 @@ pipeline {
         APP_NAME = "aws-backend"
         CONTAINER_NAME = "aws-backend-container"
         PORT = "8080"
-        APP_DIR = "backend/aws-springboot-project"
     }
 
     stages {
 
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/Partha-Sharathy-K/aws-auth-project'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
-                sh '''
-                echo "📁 Moving to backend directory"
-                cd $APP_DIR
-
-                echo "🐳 Building Docker image"
-                docker build -t $APP_NAME .
-                '''
+                dir('backend/aws-springboot-project') {
+                    sh '''
+                      echo "📦 Current directory:"
+                      pwd
+                      echo "📁 Files:"
+                      ls -la
+                      echo "🐳 Building Docker image"
+                      docker build -t $APP_NAME .
+                    '''
+                }
             }
         }
 
         stage('Stop Old Container') {
             steps {
-                sh '''
-                echo "🛑 Stopping old container if exists"
-                docker rm -f $CONTAINER_NAME || true
-                '''
+                sh 'docker rm -f $CONTAINER_NAME || true'
             }
         }
 
         stage('Run Container') {
             steps {
                 sh '''
-                echo "🚀 Running new container"
-                docker run -d \
-                  --name $CONTAINER_NAME \
-                  --network aws-network \
-                  -p $PORT:$PORT \
-                  $APP_NAME
+                  docker run -d \
+                    --name $CONTAINER_NAME \
+                    --network aws-network \
+                    -p $PORT:$PORT \
+                    $APP_NAME
                 '''
             }
         }
-	stage('Debug') {
-            steps {
-                sh 'pwd'
-                sh 'ls'
-                sh 'ls backend/aws-springboot-project'
-           }
-        }
-
     }
 
     post {
