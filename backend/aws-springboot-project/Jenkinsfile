@@ -5,6 +5,7 @@ pipeline {
         APP_NAME = "aws-backend"
         CONTAINER_NAME = "aws-backend-container"
         PORT = "8080"
+        APP_DIR = "backend/aws-springboot-project"
     }
 
     stages {
@@ -19,6 +20,10 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
+                echo "📁 Moving to backend directory"
+                cd $APP_DIR
+
+                echo "🐳 Building Docker image"
                 docker build -t $APP_NAME .
                 '''
             }
@@ -27,6 +32,7 @@ pipeline {
         stage('Stop Old Container') {
             steps {
                 sh '''
+                echo "🛑 Stopping old container if exists"
                 docker rm -f $CONTAINER_NAME || true
                 '''
             }
@@ -35,6 +41,7 @@ pipeline {
         stage('Run Container') {
             steps {
                 sh '''
+                echo "🚀 Running new container"
                 docker run -d \
                   --name $CONTAINER_NAME \
                   --network aws-network \
