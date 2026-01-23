@@ -50,6 +50,14 @@ pipeline {
                 '''
             }
         }
+	stage('Debug') {
+            steps {
+                sh 'pwd'
+                sh 'ls'
+                sh 'ls backend/aws-springboot-project'
+           }
+        }
+
     }
 
     post {
