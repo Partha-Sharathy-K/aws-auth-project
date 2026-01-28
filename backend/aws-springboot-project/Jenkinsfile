@@ -19,7 +19,6 @@ pipeline {
             steps {
                 dir('backend/aws-springboot-project') {
                     sh  'mvn clean install -Dmaven.test.skip=true'
-'
                 }
             }
         }
