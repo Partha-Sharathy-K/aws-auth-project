@@ -42,16 +42,31 @@ pipeline {
 
         stage('Run Backend Container') {
             steps {
-                sh """
-                docker run -d \
-                --name ${CONTAINER_NAME} \
-                --env-file .env \
-                --network aws-network \
-                -p ${PORT}:8080 \
-                ${IMAGE_NAME}:latest
-                """
-            }
+                withCredentials([
+                    string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
+                    string(credentialsId: 'AWS_REGION', variable: 'AWS_REGION'),
+                    string(credentialsId: 'COGNITO_USER_POOL_ID', variable: 'COGNITO_USER_POOL_ID'),
+                    string(credentialsId: 'COGNITO_CLIENT_ID', variable: 'COGNITO_CLIENT_ID'),
+                    string(credentialsId: 'COGNITO_CLIENT_SECRET', variable: 'COGNITO_CLIENT_SECRET')
+                ]) {
+                    sh """
+                    docker run -d \
+                    --name ${CONTAINER_NAME} \
+                    --network aws-network \
+                    -p ${PORT}:8080 \
+                    -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+                    -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+                    -e AWS_REGION=$AWS_REGION \
+                    -e COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID \
+                    -e COGNITO_CLIENT_ID=$COGNITO_CLIENT_ID \
+                    -e COGNITO_CLIENT_SECRET=$COGNITO_CLIENT_SECRET \
+                     ${IMAGE_NAME}:latest
+                     """
+                   }
+               }
         }
+
     }
 
     post {
