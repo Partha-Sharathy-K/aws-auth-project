@@ -1,0 +1,69 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME     = "frontend-container"
+        CONTAINER_NAME = "frontend-container"
+        PORT           = "80"
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                dir('frontend/aws-springboot-app') {
+                    sh '''
+                    npm install
+                    npm run build
+                    '''
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('frontend/aws-springboot-app') {
+                    sh '''
+                    docker build -t ${IMAGE_NAME}:latest .
+                    '''
+                }
+            }
+        }
+
+        stage('Stop Old Container') {
+            steps {
+                sh '''
+                docker stop ${CONTAINER_NAME} || true
+                docker rm ${CONTAINER_NAME} || true
+                '''
+            }
+        }
+
+        stage('Run Frontend Container') {
+            steps {
+                sh '''
+                docker run -d \
+                --name ${CONTAINER_NAME} \
+                -p ${PORT}:80 \
+                ${IMAGE_NAME}:latest
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Frontend deployed successfully"
+        }
+        failure {
+            echo "❌ Frontend deployment failed"
+        }
+    }
+}
+
