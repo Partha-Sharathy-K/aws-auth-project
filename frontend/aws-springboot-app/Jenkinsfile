@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME     = "frontend-container"
+        IMAGE_NAME = "frontend-container"
         CONTAINER_NAME = "frontend-container"
-        PORT           = "80"
+        PORT = "80"
     }
 
     stages {
@@ -12,17 +12,6 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 checkout scm
-            }
-        }
-
-        stage('Build Frontend') {
-            steps {
-                dir('frontend/aws-springboot-app') {
-                    sh '''
-                    npm install
-                    npm run build
-                    '''
-                }
             }
         }
 
@@ -47,12 +36,16 @@ pipeline {
 
         stage('Run Frontend Container') {
             steps {
-                sh '''
-                docker run -d \
-                --name ${CONTAINER_NAME} \
-                -p ${PORT}:80 \
-                ${IMAGE_NAME}:latest
-                '''
+                dir('frontend/aws-springboot-app') {
+                    sh '''
+                    docker run -d \
+                    --name ${CONTAINER_NAME} \
+                    --env-file .env \
+                    --network aws-network \
+                    -p ${PORT}:80 \
+                    ${IMAGE_NAME}:latest
+                    '''
+                }
             }
         }
     }
