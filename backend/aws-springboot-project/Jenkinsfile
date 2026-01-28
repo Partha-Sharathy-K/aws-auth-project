@@ -45,7 +45,7 @@ pipeline {
                 sh """
                 docker run -d \
                 --name ${CONTAINER_NAME} \
-                --env-file backend/aws-springboot-project/.env \
+                --env-file .env \
                 --network aws-network \
                 -p ${PORT}:8080 \
                 ${IMAGE_NAME}:latest
