@@ -39,16 +39,15 @@ pipeline {
                 """
             }
         }
-
         stage('Run Backend Container') {
             steps {
                 withCredentials([
-                    string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AKIAYK6BVJL3B5ZHOKX2'),
-                    string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: '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'),
-                    string(credentialsId: 'AWS_REGION', variable: 'ap-south-1'),
-                    string(credentialsId: 'COGNITO_USER_POOL_ID', variable: 'ap-south-1_oj0VrOvfN'),
-                    string(credentialsId: 'COGNITO_CLIENT_ID', variable: '423p601m159b0c24hcc9tj0ogo'),
-                    string(credentialsId: 'COGNITO_CLIENT_SECRET', variable: 'qqkk2av2ln5rtd2k6l2f1jaf799v43qjnt9v0ucl3pmn57pgaa3')
+                    string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
+                    string(credentialsId: 'AWS_REGION', variable: 'AWS_REGION'),
+                    string(credentialsId: 'COGNITO_USER_POOL_ID', variable: 'COGNITO_USER_POOL_ID'),
+                    string(credentialsId: 'COGNITO_CLIENT_ID', variable: 'COGNITO_CLIENT_ID'),
+                    string(credentialsId: 'COGNITO_CLIENT_SECRET', variable: 'COGNITO_CLIENT_SECRET')
                 ]) {
                     sh """
                     docker run -d \
@@ -61,12 +60,11 @@ pipeline {
                     -e COGNITO_USER_POOL_ID=$COGNITO_USER_POOL_ID \
                     -e COGNITO_CLIENT_ID=$COGNITO_CLIENT_ID \
                     -e COGNITO_CLIENT_SECRET=$COGNITO_CLIENT_SECRET \
-                     ${IMAGE_NAME}:latest
-                     """
-                   }
+                    ${IMAGE_NAME}:latest
+                    """
                }
+            }
         }
-
     }
 
     post {
