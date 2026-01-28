@@ -46,7 +46,7 @@ pipeline {
                    docker run -d \
                    --name backend-container \
                    --env-file .env \
-                   --network aws-network \
+                   --network aws-net \
                    -p 8080:8080 \
                    backend-container:latest
                    '''
