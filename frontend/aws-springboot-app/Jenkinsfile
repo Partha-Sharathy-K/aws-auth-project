@@ -41,7 +41,7 @@ pipeline {
                     docker run -d \
                     --name ${CONTAINER_NAME} \
                     --env-file .env \
-                    --network aws-network \
+                    --network aws-net \
                     -p ${PORT}:80 \
                     ${IMAGE_NAME}:latest
                     '''
